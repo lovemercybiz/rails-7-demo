@@ -2,7 +2,8 @@ class CommentsController < ApplicationController
     before_action :set_post, only: %i[ create destroy ]
     
     def create
-        @post.comments.create! params.required(:comment).permit(:content)
+        comment = @post.comments.create! params.required(:comment).permit(:content)
+        CommentsMailer.submitted(comment).deliver_later
         redirect_to @post
     end
 
